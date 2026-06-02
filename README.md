@@ -1,8 +1,8 @@
 # BookLog
 
-### 1. Kloniranje repo-a
+### 1. Kloniranje repozitorija
 ```bash
-git clone <repo-url>
+git clone git@github.com:markosalai/BookLog.git
 cd app
 ```
 ### 2. Kreiranje virtualnog okruženja i instaliranje paketa
