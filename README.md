@@ -1,6 +1,6 @@
 # BookLog
 
-### 1. Kloniranje repozitorija (unutar laragon/www/ direktorija nakon instalacije [Laragona](https://laragon.org/download))
+### 1. Kloniranje repozitorija (unutar `laragon/www/` direktorija nakon instalacije [Laragona](https://laragon.org/download))
 ```bash
 git clone git@github.com:markosalai/BookLog.git
 cd app
