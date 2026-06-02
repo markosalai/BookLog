@@ -33,22 +33,22 @@ BookLog je aplikacija za bibliofile koji žele pratiti što su pročitali. Koris
 
 #### Korak 1: Postavljanje projekta i baze podataka
 - [x] Inicijalizirati GitHub repozitorij s `README.md`
-- [ ] Konfigurirati Laragon razvojno okruženje 
-- [ ] Dizajnirati ER dijagram: User, Book, Review 
-- [ ] Napisati SQL skriptu - uključiti `CHECK` ograničenje za ocjenu (1-5) i `DEFAULT` vrijednosti 
-- [ ] Osmisliti relacije: korisnik dodaje knjige, korisnik može recenzirati knjigu (jednom) 
-- [ ] Napisati `ADR-001.md`: obrazložiti odluku o pohrani ISBN-a i validaciji duplikata 
-- [ ] Pushati na GitHub: SQL, ER dijagram, README, ADR-001 
+- [x] Konfigurirati Laragon razvojno okruženje 
+- [x] Dizajnirati ER dijagram: User, Book, Review 
+- [x] Napisati SQL skriptu - uključiti `CHECK` ograničenje za ocjenu (1-5) i `DEFAULT` vrijednosti 
+- [x] Osmisliti relacije: korisnik dodaje knjige, korisnik može recenzirati knjigu (jednom) 
+- [x] Napisati `ADR-001.md`: obrazložiti odluku o pohrani ISBN-a i validaciji duplikata 
+- [x] Pushati na GitHub: SQL, ER dijagram, README, ADR-001 
 
 #### Korak 2: MVC arhitektura i prikaz podataka
-* Uspostaviti MVC strukturu projekta 
-* Kreirati `BookModel` s metodama: `findAll()`, `findByUser()`, `findById()`, `create()`, `update()`, `delete()`, `search()` 
-* Kreirati `ReviewModel` s metodama: `findByBook()`, `findByUser()`, `create()`, `update()`, `toggleVisibility()` 
-* Kreirati `BookController` i `ReviewController` 
-* Kreirati Views: knjižna polica korisnika, detalji knjige s recenzijama, forma za dodavanje knjige 
-* Implementirati pretragu knjiga po naslovu ili autoru 
-* Prikazati prosječnu ocjenu za svaku knjigu izračunatu u SQL upitu 
-* Pushati na GitHub: MVC struktura s prikazom podataka 
+- [ ] Uspostaviti MVC strukturu projekta 
+- [ ] Kreirati `BookModel` s metodama: `findAll()`, `findByUser()`, `findById()`, `create()`, `update()`, `delete()`, `search()` 
+- [ ] Kreirati `ReviewModel` s metodama: `findByBook()`, `findByUser()`, `create()`, `update()`, `toggleVisibility()` 
+- [ ] Kreirati `BookController` i `ReviewController` 
+- [ ] Kreirati Views: knjižna polica korisnika, detalji knjige s recenzijama, forma za dodavanje knjige 
+- [ ] Implementirati pretragu knjiga po naslovu ili autoru 
+- [ ] Prikazati prosječnu ocjenu za svaku knjigu izračunatu u SQL upitu 
+- [ ] Pushati na GitHub: MVC struktura s prikazom podataka 
 
 #### Korak 3: REST API s JSON odgovorima
 * Implementirati `GET /api/books` - lista knjiga s prosječnom ocjenom 
