@@ -41,25 +41,25 @@ BookLog je aplikacija za bibliofile koji žele pratiti što su pročitali. Koris
 - [x] Pushati na GitHub: SQL, ER dijagram, README, ADR-001 
 
 #### Korak 2: MVC arhitektura i prikaz podataka
-- [ ] Uspostaviti MVC strukturu projekta 
+- [x] Uspostaviti MVC strukturu projekta 
 - [x] Kreirati `BookModel` s metodama: `findAll()`, `findByUser()`, `findById()`, `create()`, `update()`, `delete()`, `search()` 
 - [x] Kreirati `ReviewModel` s metodama: `findByBook()`, `findByUser()`, `create()`, `update()`, `toggleVisibility()` 
-- [ ] Kreirati `BookController` i `ReviewController` 
-- [ ] Kreirati Views: knjižna polica korisnika, detalji knjige s recenzijama, forma za dodavanje knjige 
+- [x] Kreirati `BookController` i `ReviewController` (*dodani su ekvivalenti u views.py za Django)
+- [x] Kreirati Views: knjižna polica korisnika, detalji knjige s recenzijama, forma za dodavanje knjige 
 - [ ] Implementirati pretragu knjiga po naslovu ili autoru 
-- [ ] Prikazati prosječnu ocjenu za svaku knjigu izračunatu u SQL upitu 
-- [ ] Pushati na GitHub: MVC struktura s prikazom podataka 
+- [x] Prikazati prosječnu ocjenu za svaku knjigu izračunatu u SQL upitu 
+- [x] Pushati na GitHub: MVC struktura s prikazom podataka 
 
 #### Korak 3: REST API s JSON odgovorima
-* Implementirati `GET /api/books` - lista knjiga s prosječnom ocjenom 
-* Implementirati `GET /api/books/{id}` - detalji knjige sa svim recenzijama 
-* Implementirati `POST /api/books` - dodavanje nove knjige 
-* Implementirati `PUT /api/books/{id}` - uređivanje knjige 
-* Implementirati `DELETE /api/books/{id}` - brisanje knjige 
-* Implementirati `POST /api/books/{id}/reviews` - dodavanje recenzije 
-* Implementirati `DELETE /api/reviews/{id}` - brisanje recenzije 
-* Koristiti Fetch API za dinamično učitavanje recenzija bez osvježavanja stranice 
-* Pushati na GitHub: API endpointi, Fetch integracija 
+- [x] Implementirati `GET /api/books` - lista knjiga s prosječnom ocjenom 
+- [x] Implementirati `GET /api/books/{id}` - detalji knjige sa svim recenzijama 
+- [x] Implementirati `POST /api/books` - dodavanje nove knjige 
+- [x] Implementirati `PUT /api/books/{id}` - uređivanje knjige 
+- [x] Implementirati `DELETE /api/books/{id}` - brisanje knjige 
+- [x] Implementirati `POST /api/books/{id}/reviews` - dodavanje recenzije 
+- [x] Implementirati `DELETE /api/reviews/{id}` - brisanje recenzije 
+- [x] Koristiti Fetch API za dinamično učitavanje recenzija bez osvježavanja stranice 
+- [x] Pushati na GitHub: API endpointi, Fetch integracija 
 
 #### Korak 4: Autentikacija i autorizacija (JWT)
 * Implementirati registraciju i prijavu s JWT tokenom 
