@@ -42,8 +42,8 @@ BookLog je aplikacija za bibliofile koji žele pratiti što su pročitali. Koris
 
 #### Korak 2: MVC arhitektura i prikaz podataka
 - [ ] Uspostaviti MVC strukturu projekta 
-- [ ] Kreirati `BookModel` s metodama: `findAll()`, `findByUser()`, `findById()`, `create()`, `update()`, `delete()`, `search()` 
-- [ ] Kreirati `ReviewModel` s metodama: `findByBook()`, `findByUser()`, `create()`, `update()`, `toggleVisibility()` 
+- [x] Kreirati `BookModel` s metodama: `findAll()`, `findByUser()`, `findById()`, `create()`, `update()`, `delete()`, `search()` 
+- [x] Kreirati `ReviewModel` s metodama: `findByBook()`, `findByUser()`, `create()`, `update()`, `toggleVisibility()` 
 - [ ] Kreirati `BookController` i `ReviewController` 
 - [ ] Kreirati Views: knjižna polica korisnika, detalji knjige s recenzijama, forma za dodavanje knjige 
 - [ ] Implementirati pretragu knjiga po naslovu ili autoru 
