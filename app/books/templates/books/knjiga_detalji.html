@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head><title>Detalji knjige</title></head>
+<body>
+    <div id="knjiga-info"></div>
+    <h1>{{ knjiga.naslov }}</h1>
+        <p>{{ knjiga.autor }} - {{ knjiga.godina_izdanja }}</p>
+        <p>{{ knjiga.opis }}</p>
+
+    <h2>Recenzije</h2>
+        {% for recenzija in recenzije %}
+    <div>
+        <p>Ocjena: {{ recenzija.ocjena }}/5</p>
+        <p>{{ recenzija.tekst }}</p>
+    </div>
+        {% endfor %}
+    <div id="recenzije-lista"></div>
+
+    <h3>Dodaj recenziju</h3>
+    <textarea id="tekst" placeholder="Tekst recenzije"></textarea>
+    <select id="ocjena">
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+    </select>
+    <button onclick="dodajRecenziju()">Spremi</button>
+
+    <script>
+        // extract book id from URL /api/books/1/
+        const knjigaId = window.location.pathname.split('/').filter(Boolean).pop();
+
+        // load book details and reviews on page load
+        async function ucitajKnjigu() {
+            const response = await fetch(`/api/books/${knjigaId}/`);
+            const data = await response.json();
+
+            document.getElementById('knjiga-info').innerHTML = `
+                <h1>${data.naslov}</h1>
+                <p>${data.autor} (${data.godina_izdanja})</p>
+                <p>${data.opis || ''}</p>
+            `;
+
+            prikaziRecenzije(data.recenzije);
+        }
+
+        function prikaziRecenzije(recenzije) {
+            const lista = document.getElementById('recenzije-lista');
+            if (recenzije.length === 0) {
+                lista.innerHTML = '<p>Nema recenzija.</p>';
+                return;
+            }
+            lista.innerHTML = recenzije.map(r => `
+                <div>
+                    <strong>${r.korisnik__ime}</strong> - ${r.ocjena}/5
+                    <p>${r.tekst}</p>
+                    <button onclick="obrisiRecenziju(${r.id})">Obriši</button>
+                </div>
+            `).join('');
+        }
+
+        // add review without page refresh
+        async function dodajRecenziju() {
+            const tekst = document.getElementById('tekst').value;
+            const ocjena = document.getElementById('ocjena').value;
+
+            const response = await fetch(`/api/books/${knjigaId}/reviews/`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ tekst, ocjena: parseInt(ocjena) })
+            });
+
+            if (response.ok) {
+                document.getElementById('tekst').value = '';
+                ucitajKnjigu(); // reload reviews dynamically
+            }
+        }
+
+        // delete review without page refresh
+        async function obrisiRecenziju(id) {
+            const response = await fetch(`/api/reviews/${id}/obrisi/`, {
+                method: 'DELETE'
+            });
+
+            if (response.ok) {
+                ucitajKnjigu(); // reload reviews dynamically
+            }
+        }
+
+        ucitajKnjigu();
+    </script>
+</body>
+</html>

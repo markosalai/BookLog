@@ -6,6 +6,7 @@
     <title>Book list</title>
 </head>
 <body>
+    <a href="{% url 'knjiga_dodaj' %}">Dodaj knjigu</a>
     {% for book in books %}
     <ul>{{ book.naslov }}</ul>
         <li>{{ book.autor }}</li>

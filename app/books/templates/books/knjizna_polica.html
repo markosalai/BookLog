@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head><title>Knjižna polica</title></head>
+<body>
+    <h1>Moja knjižna polica</h1>
+    <a href="/books/dodaj/">Dodaj knjigu</a>
+
+    <div id="books-lista"><p>Učitavanje...</p></div>
+
+    <!-- update modal -->
+    <div id="modal" style="display:none">
+        <h2>Ažuriraj knjigu</h2>
+        <input id="edit-naslov" placeholder="Naslov" />
+        <input id="edit-autor" placeholder="Autor" />
+        <input id="edit-isbn" placeholder="ISBN" />
+        <input id="edit-zanr" placeholder="Žanr" />
+        <input id="edit-godina" placeholder="Godina izdanja" type="number" />
+        <textarea id="edit-opis" placeholder="Opis"></textarea>
+        <button onclick="spremiAzuriranje()">Spremi</button>
+        <button onclick="zatvoriModal()">Odustani</button>
+    </div>
+
+    <script>
+        let aktivnaKnjigaId = null;
+
+        async function ucitajKnjige() {
+            const response = await fetch('/api/books/');
+            const data = await response.json();
+
+            const lista = document.getElementById('books-lista');
+            if (data.books.length === 0) {
+                lista.innerHTML = '<p>Nema knjiga na polici.</p>';
+                return;
+            }
+
+            lista.innerHTML = data.books.map(knjiga => `
+                <div id="knjiga-${knjiga.id}">
+                    <a href="/books/${knjiga.id}/">
+                        <h3>${knjiga.naslov}</h3>
+                    </a>
+                    <p>${knjiga.autor} (${knjiga.godina_izdanja})</p>
+                    <p>Prosječna ocjena: ${knjiga.prosjecna_ocjena?.toFixed(1) ?? 'Nema ocjena'}</p>
+                    <button onclick="otvoriModal(${knjiga.id}, '${knjiga.naslov}', '${knjiga.autor}', '${knjiga.isbn}', '${knjiga.zanr ?? ''}', ${knjiga.godina_izdanja}, '${knjiga.opis ?? ''}')">
+                        Ažuriraj
+                    </button>
+                    <button onclick="obrisiKnjigu(${knjiga.id})">Obriši</button>
+                </div>
+            `).join('');
+        }
+
+        // delete
+        async function obrisiKnjigu(id) {
+            if (!confirm('Jesi li siguran?')) return;
+
+            const response = await fetch(`/api/books/${id}/obrisi/`, {
+                method: 'DELETE'
+            });
+
+            if (response.ok) {
+                document.getElementById(`knjiga-${id}`).remove();
+            }
+        }
+
+        // open modal and pre-fill with current book data
+        function otvoriModal(id, naslov, autor, isbn, zanr, godina, opis) {
+            aktivnaKnjigaId = id;
+            document.getElementById('edit-naslov').value = naslov;
+            document.getElementById('edit-autor').value = autor;
+            document.getElementById('edit-isbn').value = isbn;
+            document.getElementById('edit-zanr').value = zanr;
+            document.getElementById('edit-godina').value = godina;
+            document.getElementById('edit-opis').value = opis;
+            document.getElementById('modal').style.display = 'block';
+        }
+
+        function zatvoriModal() {
+            aktivnaKnjigaId = null;
+            document.getElementById('modal').style.display = 'none';
+        }
+
+        // update
+        async function spremiAzuriranje() {
+            const response = await fetch(`/api/books/${aktivnaKnjigaId}/uredi/`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    naslov: document.getElementById('edit-naslov').value,
+                    autor: document.getElementById('edit-autor').value,
+                    isbn: document.getElementById('edit-isbn').value,
+                    zanr: document.getElementById('edit-zanr').value,
+                    godina_izdanja: parseInt(document.getElementById('edit-godina').value),
+                    opis: document.getElementById('edit-opis').value,
+                })
+            });
+
+            if (response.ok) {
+                zatvoriModal();
+                ucitajKnjige(); // reload list with updated data
+            }
+        }
+
+        ucitajKnjige();
+    </script>
+</body>
+</html>
