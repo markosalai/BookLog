@@ -10,12 +10,18 @@ cd app
 python -m venv .venv
 .\.venv\Scripts\activate # Windows
 source .venv/bin/activate # MacOS i Linux
-pip install -r ../requirements.txt
+pip install -r requirements.txt
 ```
-### 3. Kreiranje baze u Laragonu (HeidiSQL) - prazne baze pod nazivom `booklog`
+### 3. Postavljanje varijabli okruženja
+Kreirati `.env` file i onda: 
+```bash
+cp .env.example .env
+```
+### 4. Kreiranje baze u Laragonu (HeidiSQL) - prazne baze pod nazivom `booklog`
 
-### 4. Pokretanje migracija za inicijalizaciju baze
+### 5. Pokretanje migracija za inicijalizaciju baze
+` python manage.py makemigrations `
 ` python manage.py migrate `
 
-### 5. Pokretanje servera
+### 6. Pokretanje servera
 ` python manage.py runserver `
