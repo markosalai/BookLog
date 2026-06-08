@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book list</title>
+</head>
+<body>
+    {% for book in books %}
+    <ul>{{ book.naslov }}</ul>
+        <li>{{ book.autor }}</li>
+        <li>{{ book.isbn }}</li>
+        <li>{{ book.zanr }}</li>
+        <li>{{ book.opis }}</li>
+        <li>{{ book.godina_izdanja }}</li>
+    {% endfor %}
+</body>
+</html>
