@@ -1,5 +1,5 @@
 from django.urls import path
-from . import views_web
+from . import views_web, views
 
 urlpatterns = [
     path('', views_web.knjizna_polica, name='knjizna_polica'),

@@ -28,8 +28,13 @@
     <button onclick="dodajRecenziju()">Spremi</button>
 
     <script>
+        const token = localStorage.getItem('access_token');
         // extract book id from URL /api/books/1/
         const knjigaId = window.location.pathname.split('/').filter(Boolean).pop();
+
+         if (!token) {
+            window.location.href = '/auth/login/';
+        }
 
         // load book details and reviews on page load
         async function ucitajKnjigu() {
@@ -67,20 +72,28 @@
 
             const response = await fetch(`/api/books/${knjigaId}/reviews/`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                 },
                 body: JSON.stringify({ tekst, ocjena: parseInt(ocjena) })
             });
 
             if (response.ok) {
                 document.getElementById('tekst').value = '';
-                ucitajKnjigu(); // reload reviews dynamically
+                //ucitajKnjigu(); // reload reviews dynamically
+                window.location.href = '/books/'
+            } else {
+                const data = await response.json();
+                alert(data.error);
             }
         }
 
         // delete review without page refresh
         async function obrisiRecenziju(id) {
             const response = await fetch(`/api/reviews/${id}/obrisi/`, {
-                method: 'DELETE'
+                method: 'DELETE',
+                headers: { 'Authorization': `Bearer ${token}` }
             });
 
             if (response.ok) {

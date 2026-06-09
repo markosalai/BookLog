@@ -4,11 +4,31 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 from django.db.models import Avg
 from .models import Knjiga, Recenzija
+from .middleware import jwt_required, admin_required
+from rest_framework_simplejwt.tokens import AccessToken
+from rest_framework_simplejwt.exceptions import TokenError, InvalidToken
 
 # GET /api/books
 @require_http_methods(["GET"])
+@csrf_exempt
 def book_list(request):
     books = Knjiga.objects.annotate(
+        prosjecna_ocjena=Avg('recenzija__ocjena')
+    ).values(
+        'id', 'naslov', 'autor', 'isbn',
+        'zanr', 'godina_izdanja', 'prosjecna_ocjena',
+        'korisnik__ime'
+    )
+    return JsonResponse({'books': list(books)})
+
+# GET /api/books/moja-polica/ - only logged in user's books
+@csrf_exempt
+@jwt_required
+@require_http_methods(["GET"])
+def moja_polica(request):
+    books = Knjiga.objects.filter(
+        korisnik=request.user
+    ).annotate(
         prosjecna_ocjena=Avg('recenzija__ocjena')
     ).values(
         'id', 'naslov', 'autor', 'isbn',
@@ -16,9 +36,9 @@ def book_list(request):
     )
     return JsonResponse({'books': list(books)})
 
-
 # GET/POST /api/books
 @csrf_exempt
+@jwt_required
 @require_http_methods(["POST"])
 def book_create(request):
     data = json.loads(request.body)
@@ -43,35 +63,39 @@ def book_create(request):
 
 
 # GET /api/books/{id}
-@require_http_methods(["GET"])
+# @require_http_methods(["GET"])
+@csrf_exempt
 def book_detail(request, id):
-    try:
-        knjiga = Knjiga.objects.get(id=id)
-    except Knjiga.DoesNotExist:
-        return JsonResponse({'error': 'Knjiga nije pronađena'}, status=404)
+    if request.method == 'GET':
+        try:
+            knjiga = Knjiga.objects.get(id=id)
+        except Knjiga.DoesNotExist:
+            return JsonResponse({'error': 'Knjiga nije pronađena'}, status=404)
 
-    recenzije = Recenzija.objects.filter(knjiga_id=id).values(
-        'id', 'tekst', 'ocjena', 'vidljiva',
-        'datum_pisanja', 'korisnik__ime'
-    )
-    return JsonResponse({
-        'id': knjiga.id,
-        'naslov': knjiga.naslov,
-        'autor': knjiga.autor,
-        'isbn': knjiga.isbn,
-        'zanr': knjiga.zanr,
-        'opis': knjiga.opis,
-        'godina_izdanja': knjiga.godina_izdanja,
-        'recenzije': list(recenzije)
-    })
+        recenzije = Recenzija.objects.filter(knjiga_id=id).values(
+            'id', 'tekst', 'ocjena', 'vidljiva',
+            'datum_pisanja', 'korisnik__ime'
+        )
+        return JsonResponse({
+            'id': knjiga.id,
+            'naslov': knjiga.naslov,
+            'autor': knjiga.autor,
+            'isbn': knjiga.isbn,
+            'zanr': knjiga.zanr,
+            'opis': knjiga.opis,
+            'godina_izdanja': knjiga.godina_izdanja,
+            'recenzije': list(recenzije)
+        })
+    return JsonResponse({'error': 'Method not allowed'}, status=405)
 
 
 # PUT /api/books/{id}
 @csrf_exempt
+@jwt_required
 @require_http_methods(["PUT"])
 def book_update(request, id):
     try:
-        knjiga = Knjiga.objects.get(id=id)
+        knjiga = Knjiga.objects.get(id=id, korisnik=request.user)
     except Knjiga.DoesNotExist:
         return JsonResponse({'error': 'Knjiga nije pronađena'}, status=404)
 
@@ -91,10 +115,11 @@ def book_update(request, id):
 
 # DELETE /api/books/{id}
 @csrf_exempt
+@jwt_required
 @require_http_methods(["DELETE"])
 def book_delete(request, id):
     try:
-        knjiga = Knjiga.objects.get(id=id)
+        knjiga = Knjiga.objects.get(id=id, korisnik=request.user)
     except Knjiga.DoesNotExist:
         return JsonResponse({'error': 'Knjiga nije pronađena'}, status=404)
 
@@ -104,6 +129,7 @@ def book_delete(request, id):
 
 # POST /api/books/{id}/reviews
 @csrf_exempt
+@jwt_required
 @require_http_methods(["POST"])
 def book_reviews(request, id):
     try:
@@ -130,12 +156,42 @@ def book_reviews(request, id):
 
 # DELETE /api/reviews/{id}
 @csrf_exempt
+@jwt_required
 @require_http_methods(["DELETE"])
 def review_delete(request, id):
     try:
-        recenzija = Recenzija.objects.get(id=id)
+        recenzija = Recenzija.objects.get(id=id, korisnik=request.user)
     except Recenzija.DoesNotExist:
         return JsonResponse({'error': 'Recenzija nije pronađena'}, status=404)
 
     recenzija.delete()
     return JsonResponse({'message': 'Recenzija obrisana'}, status=200)
+
+# GET /api/admin/reviews/ - sve recenzije za admina
+@csrf_exempt
+@admin_required
+@require_http_methods(["GET"])
+def admin_reviews(request):
+    recenzije = Recenzija.objects.all().values(
+        'id', 'tekst', 'ocjena', 'vidljiva',
+        'datum_pisanja', 'korisnik__ime', 'korisnik__email',
+        'knjiga__naslov'
+    )
+    return JsonResponse({'recenzije': list(recenzije)})
+
+# PUT /api/admin/reviews/{id}/moderiraj/ - toggle vidljivost
+@csrf_exempt
+@admin_required
+@require_http_methods(["PUT"])
+def admin_moderiraj_recenziju(request, id):
+    try:
+        recenzija = Recenzija.objects.get(id=id)
+    except Recenzija.DoesNotExist:
+        return JsonResponse({'error': 'Recenzija nije pronađena'}, status=404)
+
+    recenzija.toggle_visibility()
+    return JsonResponse({
+        'id': recenzija.id,
+        'vidljiva': recenzija.vidljiva,
+        'message': f'Recenzija je sada {"vidljiva" if recenzija.vidljiva else "skrivena"}'
+    })

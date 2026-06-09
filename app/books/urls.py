@@ -9,4 +9,9 @@ urlpatterns = [
     path('books/<int:id>/obrisi/', views.book_delete, name='book_delete'),
     path('books/<int:id>/reviews/', views.book_reviews, name='book_reviews'),
     path('reviews/<int:id>/obrisi/', views.review_delete, name='review_delete'),
+    path('books/moja-polica/', views.moja_polica, name='moja_polica'),
+
+    path('admin/reviews/', views.admin_reviews, name='admin_reviews'),
+    path('admin/reviews/<int:id>/moderiraj/', views.admin_moderiraj_recenziju, name='admin_moderiraj'),
+
 ]

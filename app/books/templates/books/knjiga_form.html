@@ -1,6 +1,50 @@
-<h1>Dodaj knjigu</h1>
-<form method="POST" action="{% url 'knjiga_dodaj' %}">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Spremi</button>
-</form>
+<!DOCTYPE html>
+<html>
+<head><title>Dodaj knjigu</title></head>
+<body>
+    <h1>Dodaj knjigu</h1>
+    <div id="error" style="color:red"></div>
+
+    <input type="text" id="naslov" placeholder="Naslov" />
+    <input type="text" id="autor" placeholder="Autor" />
+    <input type="text" id="isbn" placeholder="ISBN" />
+    <input type="text" id="zanr" placeholder="Žanr" />
+    <input type="number" id="godina_izdanja" placeholder="Godina izdanja" />
+    <textarea id="opis" placeholder="Opis"></textarea>
+    <button onclick="dodajKnjigu()">Spremi</button>
+    <a href="/books/">Odustani</a>
+
+    <script>
+        const token = localStorage.getItem('access_token');
+
+        if (!token) {
+            window.location.href = '/auth/login/';
+        }
+
+        async function dodajKnjigu() {
+            const response = await fetch('/api/books/dodaj/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    naslov: document.getElementById('naslov').value,
+                    autor: document.getElementById('autor').value,
+                    isbn: document.getElementById('isbn').value,
+                    zanr: document.getElementById('zanr').value,
+                    godina_izdanja: parseInt(document.getElementById('godina_izdanja').value),
+                    opis: document.getElementById('opis').value,
+                })
+            });
+
+            if (response.ok) {
+                window.location.href = '/books/';
+            } else {
+                const data = await response.json();
+                document.getElementById('error').innerText = data.error;
+            }
+        }
+    </script>
+</body>
+</html>
