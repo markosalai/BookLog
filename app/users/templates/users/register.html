@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head><title>Registracija</title></head>
+<body>
+    <h1>Registracija</h1>
+    <div id="error" style="color:red"></div>
+
+    <input type="text" id="ime" placeholder="Ime" />
+    <input type="email" id="email" placeholder="Email" />
+    <input type="password" id="password" placeholder="Lozinka" />
+    <button onclick="registracija()">Registriraj se</button>
+    <p>Već imate račun? <a href="/auth/login/">Prijavite se</a></p>
+
+    <script>
+        async function registracija() {
+            const ime = document.getElementById('ime').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            const response = await fetch('/api/auth/register/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ ime, email, password })
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                localStorage.setItem('access_token', data.access);
+                localStorage.setItem('refresh_token', data.refresh);
+                localStorage.setItem('user', JSON.stringify(data.user));
+                window.location.href = '/books/';
+            } else {
+                document.getElementById('error').innerText = data.error;
+            }
+        }
+    </script>
+</body>
+</html>
