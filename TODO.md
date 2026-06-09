@@ -62,24 +62,24 @@ BookLog je aplikacija za bibliofile koji žele pratiti što su pročitali. Koris
 - [x] Pushati na GitHub: API endpointi, Fetch integracija 
 
 #### Korak 4: Autentikacija i autorizacija (JWT)
-* Implementirati registraciju i prijavu s JWT tokenom 
-* Zaštititi POST, PUT, DELETE endpunkte s JWT middleware-om 
-* Filtrirati knjige po korisniku: svaki korisnik vidi svoju policu 
-* Implementirati admin rutu za pregled svih recenzija i opciju moderiranja (`vidljiva = false`) 
-* Spriječiti duplikate: jedan korisnik može imati jednu recenziju po knjizi 
-* Pushati na GitHub: auth sustav, admin moderacija 
+- [x] Implementirati registraciju i prijavu s JWT tokenom 
+- [x] Zaštititi POST, PUT, DELETE endpunkte s JWT middleware-om 
+- [x] Filtrirati knjige po korisniku: svaki korisnik vidi svoju policu 
+- [ ] Implementirati admin rutu za pregled svih recenzija i opciju moderiranja (`vidljiva = false`) 
+- [x] Spriječiti duplikate: jedan korisnik može imati jednu recenziju po knjizi 
+- [x] Pushati na GitHub: auth sustav, admin moderacija 
 
 #### Korak 5: Sigurnost web aplikacije
-* Implementirati prepared statements za sve SQL upite 
-* Escapirati sadržaj recenzija u HTML prikazu (XSS zaštita) 
-* CSRF zaštita na forme za dodavanje knjige i recenzije 
-* Validirati ulazne podatke: ocjena mora biti broj između 1 i 5, ISBN format, godina izdanja (razumni raspon) 
-* Implementirati provjeru vlasništva: korisnik može brisati SAMO svoje knjige i recenzije 
-* Napisati `ADR-002.md` s opisom sigurnosnih mjera 
-* Pushati na GitHub: sigurnosne mjere, ADR-002 
+- [ ]  Implementirati prepared statements za sve SQL upite 
+- [ ]  Escapirati sadržaj recenzija u HTML prikazu (XSS zaštita) 
+- [ ]  CSRF zaštita na forme za dodavanje knjige i recenzije 
+- [ ]  Validirati ulazne podatke: ocjena mora biti broj između 1 i 5, ISBN format, godina izdanja (razumni raspon) 
+- [ ]  Implementirati provjeru vlasništva: korisnik može brisati SAMO svoje knjige i recenzije 
+- [ ]  Napisati `ADR-002.md` s opisom sigurnosnih mjera 
+- [ ]  Pushati na GitHub: sigurnosne mjere, ADR-002 
 
 #### Korak 6: Finalizacija, deployment i dokumentacija
-* Verificirati rad na Laragon okruženju 
-* Napisati `README.md` s instalacijskim uputama i opisom API-ja 
-* Dodati screenshot knjižne police u `README` 
-* Finalni push i predaja GitHub linka 
+- [ ] Verificirati rad na Laragon okruženju 
+- [ ] Napisati `README.md` s instalacijskim uputama i opisom API-ja 
+- [ ] Dodati screenshot knjižne police u `README` 
+- [ ] Finalni push i predaja GitHub linka 
