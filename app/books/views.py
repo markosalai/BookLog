@@ -72,7 +72,7 @@ def book_detail(request, id):
         except Knjiga.DoesNotExist:
             return JsonResponse({'error': 'Knjiga nije pronađena'}, status=404)
 
-        recenzije = Recenzija.objects.filter(knjiga_id=id).values(
+        recenzije = Recenzija.objects.filter(knjiga_id=id, vidljiva=True).values(
             'id', 'tekst', 'ocjena', 'vidljiva',
             'datum_pisanja', 'korisnik__ime'
         )
