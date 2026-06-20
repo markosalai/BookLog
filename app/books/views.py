@@ -195,3 +195,23 @@ def admin_moderiraj_recenziju(request, id):
         'vidljiva': recenzija.vidljiva,
         'message': f'Recenzija je sada {"vidljiva" if recenzija.vidljiva else "skrivena"}'
     })
+
+@csrf_exempt
+@require_http_methods(["GET"])
+def book_list(request):
+
+    naslov = request.GET.get('naslov', '').strip()
+    autor = request.GET.get('autor', '').strip()
+
+    books = Knjiga.objects.annotate(prosjecna_ocjena=Avg('recenzija__ocjena'))
+
+    if naslov:
+        books = books.filter(naslov__icontains = naslov)
+    if autor:
+        books = books.filter(autor__icontains = autor)
+
+    return JsonResponse({'books': list(books.values(
+        'id', 'naslov', 'autor', 'isbn',
+        'zanr', 'godina_izdanja', 'prosjecna_ocjena',
+        'korisnik__ime'
+    ))})
