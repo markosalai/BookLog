@@ -72,7 +72,7 @@ def book_detail(request, id):
         except Knjiga.DoesNotExist:
             return JsonResponse({'error': 'Knjiga nije pronađena'}, status=404)
 
-        recenzije = Recenzija.objects.filter(knjiga_id=id).values(
+        recenzije = Recenzija.objects.filter(knjiga_id=id, vidljiva=True).values(
             'id', 'tekst', 'ocjena', 'vidljiva',
             'datum_pisanja', 'korisnik__ime'
         )
@@ -195,3 +195,23 @@ def admin_moderiraj_recenziju(request, id):
         'vidljiva': recenzija.vidljiva,
         'message': f'Recenzija je sada {"vidljiva" if recenzija.vidljiva else "skrivena"}'
     })
+
+@csrf_exempt
+@require_http_methods(["GET"])
+def book_list(request):
+
+    naslov = request.GET.get('naslov', '').strip()
+    autor = request.GET.get('autor', '').strip()
+
+    books = Knjiga.objects.annotate(prosjecna_ocjena=Avg('recenzija__ocjena'))
+
+    if naslov:
+        books = books.filter(naslov__icontains = naslov)
+    if autor:
+        books = books.filter(autor__icontains = autor)
+
+    return JsonResponse({'books': list(books.values(
+        'id', 'naslov', 'autor', 'isbn',
+        'zanr', 'godina_izdanja', 'prosjecna_ocjena',
+        'korisnik__ime'
+    ))})
