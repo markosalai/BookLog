@@ -37,6 +37,7 @@
                             <textarea id="tekst" class="form-control" rows="3" placeholder="Napišite recenziju..."></textarea>
                         </div>
                         <button onclick="dodajRecenziju()" class="btn btn-primary">Spremi recenziju</button>
+                        <div id="recenzija-error" class="text-danger mt-2" style="display:none"></div>
                     </div>
                 </div>
 
@@ -54,6 +55,20 @@
     
 
     <script>
+
+        function getCsrfToken() {
+            return document.cookie.split(';')
+                .find(c => c.trim().startsWith('csrftoken='))
+                ?.split('=')[1] ?? '';
+        }
+
+        function escapeHtml(str) {
+        if (!str) return '';
+        const div = document.createElement('div');
+        div.appendChild(document.createTextNode(String(str)));
+        return div.innerHTML;
+    }
+
         const token = localStorage.getItem('access_token');
         // extract book id from URL /api/books/1/
         const knjigaId = window.location.pathname.split('/').filter(Boolean).pop();
@@ -91,10 +106,10 @@
                 <div class="card shadow-sm">
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center mb-1">
-                            <strong>${r.korisnik__ime}</strong>
+                            <strong>${escapeHtml(r.korisnik__ime)}</strong>
                             <span class="badge bg-warning text-dark">⭐ ${r.ocjena}/5</span>
                         </div>
-                        <p class="mb-2">${r.tekst}</p>
+                        <p class="mb-2">${escapeHtml(r.tekst)}</p>
                         <button onclick="obrisiRecenziju(${r.id})" class="btn btn-outline-danger btn-sm">Obriši</button>
                     </div>
                 </div>
@@ -110,7 +125,8 @@
                 method: 'POST',
                 headers: { 
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
+                    'Authorization': `Bearer ${token}`,
+                    'X-CSRFToken': getCsrfToken()
                  },
                 body: JSON.stringify({ tekst, ocjena: parseInt(ocjena) })
             });
@@ -118,10 +134,13 @@
             if (response.ok) {
                 document.getElementById('tekst').value = '';
                 ucitajKnjigu(); // reload reviews dynamically
-                //window.location.href = '/books/'
+                window.location.href = '/books/'
             } else {
                 const data = await response.json();
-                alert(data.error);
+                // alert(data.error);
+                const errorDiv = document.getElementById('recenzija-error');
+                errorDiv.innerText = data.error || 'Greška pri dodavanju recenzije';
+                errorDiv.style.display = 'block';
             }
         }
 
@@ -129,7 +148,10 @@
         async function obrisiRecenziju(id) {
             const response = await fetch(`/api/reviews/${id}/obrisi/`, {
                 method: 'DELETE',
-                headers: { 'Authorization': `Bearer ${token}` }
+                headers: { 
+                    'Authorization': `Bearer ${token}`,
+                    'X-CSRFToken': getCsrfToken()
+                 }
             });
 
             if (response.ok) {

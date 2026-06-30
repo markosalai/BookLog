@@ -58,6 +58,12 @@
     
 
     <script>
+
+        function getCsrfToken() {
+            return document.cookie.split(';')
+                .find(c => c.trim().startsWith('csrftoken='))
+                ?.split('=')[1] ?? '';
+        }
         const token = localStorage.getItem('access_token');
 
         if (!token) {
@@ -65,11 +71,15 @@
         }
 
         async function dodajKnjigu() {
+            document.querySelectorAll('.invalid-feedback').forEach(el => el.remove());
+            document.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
+
             const response = await fetch('/api/books/dodaj/', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
+                    'Authorization': `Bearer ${token}`,
+                    'X-CSRFToken': getCsrfToken()
                 },
                 body: JSON.stringify({
                     naslov: document.getElementById('naslov').value,
@@ -85,7 +95,23 @@
                 window.location.href = '/books/';
             } else {
                 const data = await response.json();
-                document.getElementById('error').innerText = data.error;
+
+                if (data.errors) {
+                    Object.entries(data.errors).forEach(([field, message]) => {
+                        const input = document.getElementById(field);
+                        if (input) {
+                            input.classList.add('is-invalid');
+                            const feedback = document.createElement('div');
+                            feedback.className = 'invalid-feedback';
+                            feedback.innerText = message;
+                            input.after(feedback);
+                        }
+                    });
+                }
+                
+                if (data.error) {
+                    document.getElementById('error').innerText = data.error;
+                }
             }
         }
     </script>
