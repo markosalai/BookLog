@@ -7,6 +7,8 @@ from .models import Knjiga, Recenzija
 from .middleware import jwt_required, admin_required
 from rest_framework_simplejwt.tokens import AccessToken
 from rest_framework_simplejwt.exceptions import TokenError, InvalidToken
+from .validators import validiraj_knjigu, validiraj_ocjenu
+from django.core.exceptions import ValidationError
 
 # GET /api/books
 @require_http_methods(["GET"])
@@ -37,11 +39,16 @@ def moja_polica(request):
     return JsonResponse({'books': list(books)})
 
 # GET/POST /api/books
-@csrf_exempt
+# @csrf_exempt
 @jwt_required
 @require_http_methods(["POST"])
 def book_create(request):
     data = json.loads(request.body)
+
+    errors = validiraj_knjigu(data)
+    if errors:
+        return JsonResponse({'errors': errors}, status=400)
+
     try:
         knjiga = Knjiga.objects.create(
             naslov=data['naslov'],
@@ -90,7 +97,7 @@ def book_detail(request, id):
 
 
 # PUT /api/books/{id}
-@csrf_exempt
+# @csrf_exempt
 @jwt_required
 @require_http_methods(["PUT"])
 def book_update(request, id):
@@ -100,6 +107,10 @@ def book_update(request, id):
         return JsonResponse({'error': 'Knjiga nije pronađena'}, status=404)
 
     data = json.loads(request.body)
+
+    errors = validiraj_knjigu(data)
+    if errors:
+        return JsonResponse({'errors': errors}, status=400)
 
     allowed = ['naslov', 'autor', 'isbn', 'zanr', 'opis', 'godina_izdanja']
     filtered = {k: v for k, v in data.items() if k in allowed}
@@ -114,7 +125,7 @@ def book_update(request, id):
 
 
 # DELETE /api/books/{id}
-@csrf_exempt
+# @csrf_exempt
 @jwt_required
 @require_http_methods(["DELETE"])
 def book_delete(request, id):
@@ -128,7 +139,7 @@ def book_delete(request, id):
 
 
 # POST /api/books/{id}/reviews
-@csrf_exempt
+# @csrf_exempt
 @jwt_required
 @require_http_methods(["POST"])
 def book_reviews(request, id):
@@ -138,6 +149,12 @@ def book_reviews(request, id):
         return JsonResponse({'error': 'Knjiga nije pronađena'}, status=404)
 
     data = json.loads(request.body)
+
+    try:
+        validiraj_ocjenu(data.get('ocjena'))
+    except ValidationError as e:
+        return JsonResponse({'error': e.message}, status=400)
+    
     try:
         recenzija = Recenzija.create(
             tekst=data.get('tekst', ''),
@@ -155,7 +172,7 @@ def book_reviews(request, id):
 
 
 # DELETE /api/reviews/{id}
-@csrf_exempt
+# @csrf_exempt
 @jwt_required
 @require_http_methods(["DELETE"])
 def review_delete(request, id):
@@ -168,7 +185,7 @@ def review_delete(request, id):
     return JsonResponse({'message': 'Recenzija obrisana'}, status=200)
 
 # GET /api/admin/reviews/ - sve recenzije za admina
-@csrf_exempt
+# @csrf_exempt
 @admin_required
 @require_http_methods(["GET"])
 def admin_reviews(request):
@@ -180,7 +197,7 @@ def admin_reviews(request):
     return JsonResponse({'recenzije': list(recenzije)})
 
 # PUT /api/admin/reviews/{id}/moderiraj/ - toggle vidljivost
-@csrf_exempt
+# @csrf_exempt
 @admin_required
 @require_http_methods(["PUT"])
 def admin_moderiraj_recenziju(request, id):

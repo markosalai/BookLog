@@ -87,6 +87,8 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
+CSRF_COOKIE_HTTPONLY = False  # JS must be able to read the cookie
+
 
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
