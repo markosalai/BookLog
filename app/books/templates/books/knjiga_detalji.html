@@ -74,6 +74,7 @@
         const token = localStorage.getItem('access_token');
         // extract book id from URL /api/books/1/
         const knjigaId = window.location.pathname.split('/').filter(Boolean).pop();
+        let trenutniKorisnik = { id: null, is_admin: false };
 
          if (!token) {
             window.location.href = '/auth/login/';
@@ -83,6 +84,8 @@
         async function ucitajKnjigu() {
             const response = await fetch(`/api/books/${knjigaId}/`);
             const data = await response.json();
+
+            trenutniKorisnik = data.trenutni_korisnik
 
             document.getElementById('knjiga-info').innerHTML = `
                 <div class="d-flex justify-content-between align-items-start">
@@ -106,7 +109,9 @@
                 lista.innerHTML = '<p class="text-muted">Nema recenzija.</p>';
                 return;
             }
-            lista.innerHTML = recenzije.map(r => `
+            lista.innerHTML = recenzije.map(r => {
+                const mozeObrisati = trenutniKorisnik.is_admin || trenutniKorisnik.id === r.korisnik_id;
+                return `
                 <div class="card shadow-sm">
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center mb-1">
@@ -114,12 +119,10 @@
                             <span class="badge bg-warning text-dark">⭐ ${r.ocjena}/5</span>
                         </div>
                         <p class="mb-2">${escapeHtml(r.tekst)}</p>
-                        ${r.korisnik_id === currentUserId ? `
-                            <button onclick="obrisiRecenziju(${r.id})" class="btn btn-outline-danger btn-sm">Obriši</button>
-                        ` : ''}
+                        ${mozeObrisati ? `<button onclick="obrisiRecenziju(${r.id})" class="btn btn-outline-danger btn-sm">Obriši</button>` : ''}
                     </div>
                 </div>
-            `).join('');
+            `}).join('');
         }
 
         // add review without page refresh
