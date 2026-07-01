@@ -56,6 +56,8 @@
 
     <script>
 
+        const user = JSON.parse(localStorage.getItem('user') || '{}');
+
         function getCsrfToken() {
             return document.cookie.split(';')
                 .find(c => c.trim().startsWith('csrftoken='))
@@ -98,6 +100,8 @@
 
         function prikaziRecenzije(recenzije) {
             const lista = document.getElementById('recenzije-lista');
+            const currentUserId = user?.id;
+
             if (recenzije.length === 0) {
                 lista.innerHTML = '<p class="text-muted">Nema recenzija.</p>';
                 return;
@@ -110,7 +114,9 @@
                             <span class="badge bg-warning text-dark">⭐ ${r.ocjena}/5</span>
                         </div>
                         <p class="mb-2">${escapeHtml(r.tekst)}</p>
-                        <button onclick="obrisiRecenziju(${r.id})" class="btn btn-outline-danger btn-sm">Obriši</button>
+                        ${r.korisnik_id === currentUserId ? `
+                            <button onclick="obrisiRecenziju(${r.id})" class="btn btn-outline-danger btn-sm">Obriši</button>
+                        ` : ''}
                     </div>
                 </div>
             `).join('');

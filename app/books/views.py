@@ -81,7 +81,8 @@ def book_detail(request, id):
 
         recenzije = Recenzija.objects.filter(knjiga_id=id, vidljiva=True).values(
             'id', 'tekst', 'ocjena', 'vidljiva',
-            'datum_pisanja', 'korisnik__ime'
+            'datum_pisanja', 'korisnik__ime',
+            'korisnik_id'
         )
         return JsonResponse({
             'id': knjiga.id,
