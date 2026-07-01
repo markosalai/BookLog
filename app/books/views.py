@@ -9,6 +9,7 @@ from rest_framework_simplejwt.tokens import AccessToken
 from rest_framework_simplejwt.exceptions import TokenError, InvalidToken
 from .validators import validiraj_knjigu, validiraj_ocjenu
 from django.core.exceptions import ValidationError
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 # GET /api/books
 @require_http_methods(["GET"])
@@ -20,8 +21,25 @@ def book_list(request):
         'id', 'naslov', 'autor', 'isbn',
         'zanr', 'godina_izdanja', 'prosjecna_ocjena',
         'korisnik__ime'
-    )
-    return JsonResponse({'books': list(books)})
+    ).order_by('id')
+    page_number = request.GET.get('page', 1)
+    page_size = request.GET.get('page_size', 12)
+
+    paginator = Paginator(books,page_size)
+
+    try:
+        page = paginator.page(page_number)
+    except (EmptyPage, PageNotAnInteger):
+        return JsonResponse({'error': 'Stranica ne postoji'}, status=404)
+
+    return JsonResponse({
+        'books': list(page.object_list),
+        'total_count': paginator.count,
+        'total_pages': paginator.num_pages,
+        'current_page': page.number,
+        'has_next': page.has_next(),
+        'has_previous': page.has_previous(),
+        })
 
 # GET /api/books/moja-polica/ - only logged in user's books
 @csrf_exempt
@@ -81,7 +99,7 @@ def book_detail(request, id):
 
         recenzije = Recenzija.objects.filter(knjiga_id=id, vidljiva=True).values(
             'id', 'tekst', 'ocjena', 'vidljiva',
-            'datum_pisanja', 'korisnik__ime'
+            'datum_pisanja', 'korisnik__ime', 'korisnik_id' # dodano korisnik_id
         )
         return JsonResponse({
             'id': knjiga.id,
@@ -91,7 +109,11 @@ def book_detail(request, id):
             'zanr': knjiga.zanr,
             'opis': knjiga.opis,
             'godina_izdanja': knjiga.godina_izdanja,
-            'recenzije': list(recenzije)
+            'recenzije': list(recenzije),
+            'trenutni_korisnik' : {
+                'id': request.user.id if request.user.is_authenticated else None,
+                'is_admin': request.user.is_superuser if request.user.is_authenticated else False,
+            }
         })
     return JsonResponse({'error': 'Method not allowed'}, status=405)
 
@@ -227,8 +249,33 @@ def book_list(request):
     if autor:
         books = books.filter(autor__icontains = autor)
 
+    books = books.values('id', 'naslov', 'autor', 'isbn',
+        'zanr', 'godina_izdanja', 'prosjecna_ocjena',
+        'korisnik__ime').order_by('id')
+    
+    page_number = request.GET.get('page', 1)
+    page_size = request.GET.get('page_size', 12)
+
+    paginator = Paginator(books, page_size)
+
+    try:
+        page = paginator.page(page_number)
+    except (EmptyPage, PageNotAnInteger):
+        return JsonResponse({'error': 'Stranica ne postoji'}, status=404)
+
+    return JsonResponse({
+        'books': list(page.object_list),
+        'total_count': paginator.count,
+        'total_pages': paginator.num_pages,
+        'current_page': page.number,
+        'has_next': page.has_next(),
+        'has_previous': page.has_previous(),
+    })
+    
+    """
     return JsonResponse({'books': list(books.values(
         'id', 'naslov', 'autor', 'isbn',
         'zanr', 'godina_izdanja', 'prosjecna_ocjena',
         'korisnik__ime'
     ))})
+    """

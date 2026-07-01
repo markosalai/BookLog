@@ -2,7 +2,7 @@ import json
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, login as django_login
 from rest_framework_simplejwt.tokens import RefreshToken
 from .models import Korisnik
 
@@ -57,6 +57,8 @@ def login(request):
 
     if user is None:
         return JsonResponse({'error': 'Pogrešan email ili lozinka'}, status=401)
+
+    django_login(request, user)
 
     tokens = get_tokens_for_user(user)
     return JsonResponse({
