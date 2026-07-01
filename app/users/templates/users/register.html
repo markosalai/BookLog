@@ -40,10 +40,28 @@
         
 
     <script>
+        function validEmail(email){
+            const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return regex.test(email);
+        }
+        
         async function registracija() {
             const ime = document.getElementById('ime').value;
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
+            const errorEl = document.getElementById('error');
+
+            errorEl.innerHTML = '';
+
+            if (!ime || !email || !password) {
+                errorEl.innerText = 'Sva polja su obavezna.';
+                return;
+            }
+
+            if (!validEmail(email)) {
+                errorEl.innerText = 'Unesite ispravan email.';
+                return;
+            }
 
             const response = await fetch('/api/auth/register/', {
                 method: 'POST',
@@ -59,9 +77,12 @@
                 localStorage.setItem('user', JSON.stringify(data.user));
                 window.location.href = '/books/';
             } else {
-                document.getElementById('error').innerText = data.error;
+                errorEl.innerHTML = data.error;
             }
         }
+
+
+
     </script>
 </body>
 </html>

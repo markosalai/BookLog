@@ -53,8 +53,26 @@ def moja_polica(request):
     ).values(
         'id', 'naslov', 'autor', 'isbn',
         'zanr', 'godina_izdanja', 'prosjecna_ocjena'
-    )
-    return JsonResponse({'books': list(books)})
+    ).order_by('id')
+
+    page_number = request.GET.get('page', 1)
+    page_size = request.GET.get('page_size', 12)
+
+    paginator = Paginator(books, page_size)
+
+    try:
+        page = paginator.page(page_number)
+    except (EmptyPage, PageNotAnInteger):
+        return JsonResponse({'error': 'Stranica ne postoji'}, status=404)
+
+    return JsonResponse({
+        'books': list(page.object_list),
+        'total_count': paginator.count,
+        'total_pages': paginator.num_pages,
+        'current_page': page.number,
+        'has_next': page.has_next(),
+        'has_previous': page.has_previous(),
+        })
 
 # GET/POST /api/books
 # @csrf_exempt

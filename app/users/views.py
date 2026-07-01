@@ -5,6 +5,8 @@ from django.views.decorators.http import require_http_methods
 from django.contrib.auth import authenticate, login as django_login
 from rest_framework_simplejwt.tokens import RefreshToken
 from .models import Korisnik
+from django.core.validators import validate_email
+from django.core.exceptions import ValidationError
 
 
 def get_tokens_for_user(user):
@@ -19,6 +21,18 @@ def get_tokens_for_user(user):
 @require_http_methods(["POST"])
 def register(request):
     data = json.loads(request.body)
+
+    email = data.get('email', '').strip()
+    ime = data.get('ime', '').strip()
+    password = data.get('password', '').strip()
+
+    if not email or not ime or not password:
+        return JsonResponse({'error': 'Sva polja su obavezna'}, status=400)
+    
+    try:
+        validate_email(email)
+    except ValidationError:
+        return JsonResponse({'error': 'Neispravan format emaila'}, status=400)
 
     if Korisnik.objects.filter(email=data.get('email')).exists():
         return JsonResponse({'error': 'Email već postoji'}, status=400)
