@@ -5,4 +5,5 @@ urlpatterns = [
     path('', views_web.knjizna_polica, name='knjizna_polica'),
     path('<int:id>/', views_web.knjiga_detalji, name='knjiga_detalji'),
     path('dodaj/', views_web.knjiga_dodaj, name='knjiga_dodaj'),
+    path('admin/recenzije/', views_web.admin_recenzije, name='admin_recenzije'),
 ]

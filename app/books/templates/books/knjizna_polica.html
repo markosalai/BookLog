@@ -98,6 +98,15 @@
 
         document.getElementById('korisnik-ime').innerText = `Dobrodošao, ${user.ime}`;
 
+        // add this after setting korisnik-ime
+        if (user.uloga === 'admin') {
+            const adminLink = document.createElement('a');
+            adminLink.href = '/books/admin/recenzije/';
+            adminLink.className = 'btn btn-outline-warning btn-sm';
+            adminLink.innerText = 'Moderacija recenzija';
+            document.querySelector('.navbar .d-flex.gap-3').appendChild(adminLink);
+        }
+
         document.getElementById('search-form').addEventListener('submit', function(e) {
             e.preventDefault(); // stops page reload
             const naslov = document.getElementById('titleSerch').value.trim();

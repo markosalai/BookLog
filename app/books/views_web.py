@@ -25,3 +25,7 @@ def knjiga_dodaj(request):
     else:
         form = KnjigaForm()
     return render(request, 'books/knjiga_form.html', {'form': form})
+
+@ensure_csrf_cookie
+def admin_recenzije(request):
+    return render(request, 'books/admin_recenzije.html')
