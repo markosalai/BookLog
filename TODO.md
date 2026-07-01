@@ -46,7 +46,7 @@ BookLog je aplikacija za bibliofile koji žele pratiti što su pročitali. Koris
 - [x] Kreirati `ReviewModel` s metodama: `findByBook()`, `findByUser()`, `create()`, `update()`, `toggleVisibility()` 
 - [x] Kreirati `BookController` i `ReviewController` (*dodani su ekvivalenti u views.py za Django)
 - [x] Kreirati Views: knjižna polica korisnika, detalji knjige s recenzijama, forma za dodavanje knjige 
-- [ ] Implementirati pretragu knjiga po naslovu ili autoru 
+- [x] Implementirati pretragu knjiga po naslovu ili autoru 
 - [x] Prikazati prosječnu ocjenu za svaku knjigu izračunatu u SQL upitu 
 - [x] Pushati na GitHub: MVC struktura s prikazom podataka 
 
@@ -70,13 +70,13 @@ BookLog je aplikacija za bibliofile koji žele pratiti što su pročitali. Koris
 - [x] Pushati na GitHub: auth sustav, admin moderacija 
 
 #### Korak 5: Sigurnost web aplikacije
-- [ ]  Implementirati prepared statements za sve SQL upite 
-- [ ]  Escapirati sadržaj recenzija u HTML prikazu (XSS zaštita) 
-- [ ]  CSRF zaštita na forme za dodavanje knjige i recenzije 
-- [ ]  Validirati ulazne podatke: ocjena mora biti broj između 1 i 5, ISBN format, godina izdanja (razumni raspon) 
-- [ ]  Implementirati provjeru vlasništva: korisnik može brisati SAMO svoje knjige i recenzije 
-- [ ]  Napisati `ADR-002.md` s opisom sigurnosnih mjera 
-- [ ]  Pushati na GitHub: sigurnosne mjere, ADR-002 
+- [x]  Implementirati prepared statements za sve SQL upite 
+- [x]  Escapirati sadržaj recenzija u HTML prikazu (XSS zaštita) 
+- [x]  CSRF zaštita na forme za dodavanje knjige i recenzije 
+- [x]  Validirati ulazne podatke: ocjena mora biti broj između 1 i 5, ISBN format, godina izdanja (razumni raspon) 
+- [x]  Implementirati provjeru vlasništva: korisnik može brisati SAMO svoje knjige i recenzije 
+- [x]  Napisati `ADR-002.md` s opisom sigurnosnih mjera 
+- [x]  Pushati na GitHub: sigurnosne mjere, ADR-002 
 
 #### Korak 6: Finalizacija, deployment i dokumentacija
 - [ ] Verificirati rad na Laragon okruženju 
