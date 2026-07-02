@@ -1,64 +1,53 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Dodaj knjigu</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body>
+{% extends 'books/base.html' %}
+{% block title %}Dodaj knjigu — BookLog{% endblock %}
+{% block content %}
     <h1 class="text-center mt-2">Dodaj knjigu</h1>
     <div id="error" style="color:red"></div>
 
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-6">
-
-                <div class="d-flex flex-column gap-3">
-                    <div>
-                        <label for="naslov" class="form-label">Unesite naslov</label>
-                        <input type="text" id="naslov" placeholder="Naslov" class="form-control"/>
-                    </div>
-                    
-                    <div>
-                        <label for="autor" class="form-label" class="form-label">Unesite autora</label>
-                        <input type="text" id="autor" placeholder="Autor" class="form-control"/>
-                    </div>
-                    
-                    <div>
-                        <label for="isbn" class="form-label">Unesite ISBN</label>
-                        <input type="text" id="isbn" placeholder="ISBN" class="form-control"/>
-                    </div>
-                    
-                    <div>
-                        <label for="zanr" class="form-label">Unesite Zanr</label>
-                        <input type="text" id="zanr" placeholder="Žanr" class="form-control"/>
-                    </div>
-                    
-                    <div>
-                        <label for="godina_izdanja" class="form-label"> Unesite godinu izdanja</label>
-                        <input type="number" id="godina_izdanja" placeholder="Godina izdanja" class="form-control"/>
-                    </div>
-                    
-                    <div>
-                        <label for="opis" class="form-label">Unesite opis knjige</label>
-                        <textarea id="opis" placeholder="Opis" class="form-control"></textarea>
-                    </div>
-                    
-                    <div>
-                        <button onclick="dodajKnjigu()" class="btn btn-success">Spremi</button>
-                        <a href="/books/" class="btn btn-danger">Odustani</a>
-                    </div>
+    <div class="row justify-content-center mt-4">
+        <div class="col-md-6">
+            <div class="d-flex flex-column gap-3">
+                <div>
+                    <label for="naslov" class="form-label">Unesite naslov</label>
+                    <input type="text" id="naslov" placeholder="Naslov" class="form-control"/>
+                </div>
+                
+                <div>
+                    <label for="autor" class="form-label" class="form-label">Unesite autora</label>
+                    <input type="text" id="autor" placeholder="Autor" class="form-control"/>
+                </div>
+                
+                <div>
+                    <label for="isbn" class="form-label">Unesite ISBN</label>
+                    <input type="text" id="isbn" placeholder="ISBN" class="form-control"/>
+                </div>
+                
+                <div>
+                    <label for="zanr" class="form-label">Unesite Zanr</label>
+                    <input type="text" id="zanr" placeholder="Žanr" class="form-control"/>
+                </div>
+                
+                <div>
+                    <label for="godina_izdanja" class="form-label"> Unesite godinu izdanja</label>
+                    <input type="number" id="godina_izdanja" placeholder="Godina izdanja" class="form-control"/>
+                </div>
+                
+                <div>
+                    <label for="opis" class="form-label">Unesite opis knjige</label>
+                    <textarea id="opis" placeholder="Opis" class="form-control"></textarea>
+                </div>
+                
+                <div class="d-flex gap-2">
+                    <button onclick="dodajKnjigu()" class="btn btn-success">Spremi</button>
+                    <a href="/books/" class="btn btn-outline-light">Odustani</a>
                 </div>
             </div>
         </div>
     </div>
-    
-    
-        
-    
-    
+{% endblock %}
 
-    <script>
-
+{% block scripts %}
+<script>
         function getCsrfToken() {
             return document.cookie.split(';')
                 .find(c => c.trim().startsWith('csrftoken='))
@@ -114,6 +103,5 @@
                 }
             }
         }
-    </script>
-</body>
-</html>
+</script>
+{% endblock %}
