@@ -1,19 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Book list</title>
-</head>
-<body>
-    <a href="{% url 'knjiga_dodaj' %}">Dodaj knjigu</a>
+{% extends 'books/base.html' %}
+{% block title %}Book list — BookLog{% endblock %}
+{% block content %}
+    <a href="{% url 'knjiga_dodaj' %}" class="btn btn-outline-light mb-3">Dodaj knjigu</a>
+    <div class="list-group">
     {% for book in books %}
-    <ul>{{ book.naslov }}</ul>
-        <li>{{ book.autor }}</li>
-        <li>{{ book.isbn }}</li>
-        <li>{{ book.zanr }}</li>
-        <li>{{ book.opis }}</li>
-        <li>{{ book.godina_izdanja }}</li>
+      <div class="list-group-item bg-transparent border-light mb-2">
+        <h5 class="mb-1">{{ book.naslov }}</h5>
+        <p class="mb-0 text-muted">{{ book.autor }} — {{ book.godina_izdanja }}</p>
+      </div>
     {% endfor %}
-</body>
-</html>
+    </div>
+{% endblock %}
