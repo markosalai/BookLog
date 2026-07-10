@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<-- <!DOCTYPE html>
 {% extends 'books/base.html' %}
 {% block title %}Knjižna polica — BookLog{% endblock %}
 {% block content %}
@@ -75,7 +75,7 @@
 
         document.getElementById('korisnik-ime').innerText = `Dobrodošao, ${user.ime}`;
 
-        // add this after setting korisnik-ime
+
         if (user.uloga === 'admin') {
             const adminLink = document.createElement('a');
             adminLink.href = '/books/admin/recenzije/';
@@ -161,7 +161,7 @@
 
             if (response.status === 401) { odjava(); return; }
             
-            const data =    await response.json();
+            const data = await response.json();
             document.getElementById('naslov-stranice').innerText = 'Rezultati pretrage';
             prikaziKnjige(data.books, trenutniPrikaz === 'moja');
             azurirajPaginaciju(data);
@@ -183,7 +183,7 @@
                 prikaziSveKnjige(novaStranica);
             }
         }
-
+        {% verbatim %} // IDE shows syntax errors but its okay
         function prikaziKnjige(books, showActions) {
             const lista = document.getElementById('books-lista');
 
@@ -224,7 +224,7 @@
         `).join('');
 
         }
-
+        {% endverbatim %}
         async function obrisiKnjigu(id) {
             if (!confirm('Jesi li siguran?')) return;
             const response = await fetch(`/api/books/${id}/obrisi/`, {
