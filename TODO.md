@@ -79,7 +79,7 @@ BookLog je aplikacija za bibliofile koji žele pratiti što su pročitali. Koris
 - [x]  Pushati na GitHub: sigurnosne mjere, ADR-002 
 
 #### Korak 6: Finalizacija, deployment i dokumentacija
-- [ ] Verificirati rad na Laragon okruženju 
-- [ ] Napisati `README.md` s instalacijskim uputama i opisom API-ja 
+- [x] Verificirati rad na Laragon okruženju 
+- [x] Napisati `README.md` s instalacijskim uputama i opisom API-ja 
 - [ ] Dodati screenshot knjižne police u `README` 
 - [ ] Finalni push i predaja GitHub linka 
