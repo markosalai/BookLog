@@ -27,6 +27,11 @@ cp .env.example .env
 ### 6. Pokretanje servera
 ` python manage.py runserver `
 
+### Primjer knjižne polica korisnika
+
+![alt text](knjizna_polica.png)
+
+
 ---
 ## API Dokumentacija
 
