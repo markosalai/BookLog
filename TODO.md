@@ -65,7 +65,7 @@ BookLog je aplikacija za bibliofile koji žele pratiti što su pročitali. Koris
 - [x] Implementirati registraciju i prijavu s JWT tokenom 
 - [x] Zaštititi POST, PUT, DELETE endpunkte s JWT middleware-om 
 - [x] Filtrirati knjige po korisniku: svaki korisnik vidi svoju policu 
-- [ ] Implementirati admin rutu za pregled svih recenzija i opciju moderiranja (`vidljiva = false`) 
+- [x] Implementirati admin rutu za pregled svih recenzija i opciju moderiranja (`vidljiva = false`) 
 - [x] Spriječiti duplikate: jedan korisnik može imati jednu recenziju po knjizi 
 - [x] Pushati na GitHub: auth sustav, admin moderacija 
 
@@ -81,5 +81,5 @@ BookLog je aplikacija za bibliofile koji žele pratiti što su pročitali. Koris
 #### Korak 6: Finalizacija, deployment i dokumentacija
 - [x] Verificirati rad na Laragon okruženju 
 - [x] Napisati `README.md` s instalacijskim uputama i opisom API-ja 
-- [ ] Dodati screenshot knjižne police u `README` 
-- [ ] Finalni push i predaja GitHub linka 
+- [x] Dodati screenshot knjižne police u `README` 
+- [x] Finalni push i predaja GitHub linka 
